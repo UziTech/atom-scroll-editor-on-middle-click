@@ -1,0 +1,32 @@
+{
+  "name": "scroll-editor-on-middle-click",
+  "main": "./index.js",
+  "version": "0.0.0",
+  "description": "Allow middle click to scroll editor",
+  "keywords": [
+    "middle",
+    "click",
+    "editor"
+  ],
+  "repository": "https://github.com/UziTech/atom-scroll-editor-on-middle-click",
+  "license": "MIT",
+  "engines": {
+    "atom": ">=1.21.0"
+  },
+  "configSchema": {
+    "speed": {
+      "type": "integer",
+      "default": 5,
+      "minimum": 1,
+      "title": "Speed",
+      "description": "The scrolling speed (higher is slower)."
+    },
+    "dotRadius": {
+      "type": "integer",
+      "default": 2,
+      "minimum": 0,
+      "title": "Dot Radius",
+      "description": "The size of the dot indicating the origin of the scroll."
+    }
+  }
+}
