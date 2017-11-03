@@ -75,7 +75,7 @@ export default {
 
 	windowClick(e) {
 		let editor;
-		if (e.button === 1 && (editor = e.target.closest("atom-text-editor:not([mini])")) && this.editor !== editor) { // l;kasjd lsadjf lsadj flk;sajddflkjdlk;jal;ksdjfl;kjasdl;fkjsald;kfjaslk;dfj aslk;dfj lasdkjflkadsd jflkasdj flkjadslkfjadslk;fjadslk;f
+		if (e.button === 1 && (editor = e.target.closest("atom-text-editor:not([mini])")) && this.editor !== editor) {
 			this.startScroll(editor, e);
 		} else if (this.editor) {
 			this.stopScroll();
