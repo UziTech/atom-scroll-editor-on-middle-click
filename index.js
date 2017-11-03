@@ -6,59 +6,63 @@ import { CompositeDisposable, Disposable } from "atom";
 export default {
 
 	scrollEditor() {
-		if (!this.editor) {
-			this.running = false;
-			return;
-		}
-		this.running = true;
-
-		const left = this.editor.getScrollLeft();
 		const top = this.editor.getScrollTop();
-		const right = this.editor.getScrollWidth() - this.editor.getWidth();
 		const bottom = this.editor.getScrollHeight() - this.editor.getHeight();
+		const left = this.editor.getScrollLeft();
+		const right = this.editor.getScrollWidth() - this.editor.getWidth();
 
-		let nextLeft = left + ((this.currentX - this.x) / this.speed);
-		// nextLeft = (nextLeft > right ? right : nextLeft);
-		// nextLeft = (nextLeft < 0 ? 0 : nextLeft);
-
-		let nextTop = top + ((this.currentY - this.y) / this.speed);
-		// nextTop = (nextTop > bottom ? bottom : nextTop);
-		// nextTop = (nextTop < 0 ? 0 : nextTop);
+		const diffTop = (this.currentY - this.y);
+		let moveTop = 0;
+		if (diffTop > this.threshold) {
+			moveTop = (diffTop - this.threshold) / this.speed;
+		} else if (diffTop < -this.threshold) {
+			moveTop = (diffTop + this.threshold) / this.speed;
+		}
+		const diffLeft = (this.currentX - this.x);
+		let moveLeft = 0;
+		if (diffLeft > this.threshold) {
+			moveLeft = (diffLeft - this.threshold) / this.speed;
+		} else if (diffLeft < -this.threshold) {
+			moveLeft = (diffLeft + this.threshold) / this.speed;
+		}
 
 		let dir = "";
-		dir += (nextTop < top ? "n" : (nextTop > top ? "s" : ""));
-		dir += (nextLeft < left ? "w" : (nextLeft > left ? "e" : ""));
-		this.editor.setAttribute("data-dir", dir);
+		dir += (moveTop < 0 ? "n" : (moveTop > 0 ? "s" : ""));
+		dir += (moveLeft < 0 ? "w" : (moveLeft > 0 ? "e" : ""));
+		this.editor.setAttribute("data-scroll-dir", dir);
 
-		this.editor.setScrollLeft(nextLeft);
-		this.editor.setScrollTop(nextTop);
+		this.editor.setScrollTop(top + moveTop);
+		this.editor.setScrollLeft(left + moveLeft);
 
-		requestAnimationFrame(this.scrollEditor);
+		this.animationFrameId = requestAnimationFrame(this.scrollEditor);
 	},
 
 	startScroll(editor, e) {
+		if (this.editor) {
+			this.stopScroll();
+		}
 		this.editor = editor;
 		this.editor.classList.add("scroll-editor-on-middle-click-editor");
 		this.dot.style.left = e.pageX + "px";
 		this.dot.style.top = e.pageY + "px";
-		this.dot.classList.add("show");
+		this.dot.classList.remove("hidden");
 		this.x = e.pageX;
 		this.y = e.pageY;
 		this.currentX = e.pageX;
 		this.currentY = e.pageY;
-		if (!this.running) {
-			window.addEventListener("mousemove", this.setCurrent, { capture: true, passive: true });
-			this.scrollEditor();
-		}
+		window.addEventListener("mousemove", this.setCurrent, { capture: true, passive: true });
+		this.scrollEditor();
 	},
 
 	stopScroll() {
 		window.removeEventListener("mousemove", this.setCurrent, { capture: true, passive: true });
+		cancelAnimationFrame(this.animationFrameId);
+		this.animationFrameId = null;
 		if (this.dot) {
-			this.dot.classList.remove("show");
+			this.dot.classList.add("hidden");
 		}
 		if (this.editor) {
-			this.editor.removeAttribute("data-dir");
+			this.editor.removeAttribute("data-scroll-dir");
 			this.editor.classList.remove("scroll-editor-on-middle-click-editor");
 			this.editor = null;
 		}
@@ -70,28 +74,17 @@ export default {
 	},
 
 	windowClick(e) {
-		if (e.button === 1) {
-			const editor = e.target.closest("atom-text-editor:not([mini])");
-			if (editor) {
-				if (this.editor === editor) {
-					this.stopScroll();
-				} else {
-					if (this.editor) {
-						this.editor.classList.remove("scroll-editor-on-middle-click-editor");
-					}
-					this.startScroll(editor, e);
-				}
-			} else {
-				this.stopScroll();
-			}
-		} else {
+		let editor;
+		if (e.button === 1 && (editor = e.target.closest("atom-text-editor:not([mini])")) && this.editor !== editor) { // l;kasjd lsadjf lsadj flk;sajddflkjdlk;jal;ksdjfl;kjasdl;fkjsald;kfjaslk;dfj aslk;dfj lasdkjflkadsd jflkasdj flkjadslkfjadslk;fjadslk;f
+			this.startScroll(editor, e);
+		} else if (this.editor) {
 			this.stopScroll();
 		}
 	},
 
 	createDot() {
 		this.dot = document.createElement("div");
-		this.dot.classList.add("scroll-editor-on-middle-click-dot");
+		this.dot.classList.add("scroll-editor-on-middle-click-dot", "hidden");
 		document.body.append(this.dot);
 		this.disposables.add(new Disposable(() => {
 			this.dot.remove();
@@ -111,9 +104,15 @@ export default {
 		this.scrollEditor = this.scrollEditor.bind(this);
 
 		this.createDot();
+
 		this.disposables.add(atom.config.observe("scroll-editor-on-middle-click.speed", (value) => {
 			this.speed = value;
 		}));
+
+		this.disposables.add(atom.config.observe("scroll-editor-on-middle-click.threshold", (value) => {
+			this.threshold = value;
+		}));
+
 		window.addEventListener("click", this.windowClick, { capture: true, passive: true });
 		this.disposables.add(new Disposable(() => {
 			window.removeEventListener("click", this.windowClick, { capture: true, passive: true });

@@ -1,8 +1,7 @@
 @import "syntax-variables";
 
 .scroll-editor-on-middle-click-dot {
-  cursor: move;
-  display: none;
+  cursor: url('atom://scroll-editor-on-middle-click/styles/images/all-scroll.png') 10 10, all-scroll !important;
   position: absolute;
   background-color: @syntax-text-color;
   opacity: 0.5;
@@ -11,43 +10,43 @@
   border-radius: 50%;
   transform: translate(-50%, -50%);
 
-  &.show {
-    display: block;
+  &.hidden {
+    display: none;
   }
 }
 
 atom-text-editor.scroll-editor-on-middle-click-editor {
-  cursor: move !important;
+  cursor: url('atom://scroll-editor-on-middle-click/styles/images/all-scroll.png') 10 10, all-scroll !important;
 
-  // &[data-dir="n"] {
-  //   cursor: n-resize !important;
-  // }
-  //
-  // &[data-dir="ne"] {
-  //   cursor: ne-resize !important;
-  // }
-  //
-  // &[data-dir="e"] {
-  //   cursor: e-resize !important;
-  // }
-  //
-  // &[data-dir="se"] {
-  //   cursor: se-resize !important;
-  // }
-  //
-  // &[data-dir="s"] {
-  //   cursor: s-resize !important;
-  // }
-  //
-  // &[data-dir="sw"] {
-  //   cursor: sw-resize !important;
-  // }
-  //
-  // &[data-dir="w"] {
-  //   cursor: w-resize !important;
-  // }
-  //
-  // &[data-dir="nw"] {
-  //   cursor: nw-resize !important;
-  // }
+  &[data-scroll-dir="n"] {
+    cursor: url('atom://scroll-editor-on-middle-click/styles/images/n.png') 4 9, all-scroll !important;
+  }
+
+  &[data-scroll-dir="ne"] {
+    cursor: url('atom://scroll-editor-on-middle-click/styles/images/ne.png') 2 7, all-scroll !important;
+  }
+
+  &[data-scroll-dir="e"] {
+    cursor: url('atom://scroll-editor-on-middle-click/styles/images/e.png') 2 4, all-scroll !important;
+  }
+
+  &[data-scroll-dir="se"] {
+    cursor: url('atom://scroll-editor-on-middle-click/styles/images/se.png') 2 2, all-scroll !important;
+  }
+
+  &[data-scroll-dir="s"] {
+    cursor: url('atom://scroll-editor-on-middle-click/styles/images/s.png') 4 2, all-scroll !important;
+  }
+
+  &[data-scroll-dir="sw"] {
+    cursor: url('atom://scroll-editor-on-middle-click/styles/images/sw.png') 7 2, all-scroll !important;
+  }
+
+  &[data-scroll-dir="w"] {
+    cursor: url('atom://scroll-editor-on-middle-click/styles/images/w.png') 9 4, all-scroll !important;
+  }
+
+  &[data-scroll-dir="nw"] {
+    cursor: url('atom://scroll-editor-on-middle-click/styles/images/nw.png') 7 7, all-scroll !important;
+  }
 }

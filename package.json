@@ -20,6 +20,13 @@
       "minimum": 1,
       "title": "Speed",
       "description": "The scrolling speed (higher is slower)."
+    },
+    "threshold": {
+      "type": "integer",
+      "default": 15,
+      "minimum": 1,
+      "title": "Threshold",
+      "description": "The number of pixels the mouse has to be away from the origin in order to move."
     }
   }
 }
