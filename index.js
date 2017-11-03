@@ -26,10 +26,10 @@ export default {
 			moveLeft = (diffLeft + this.threshold) / this.speed;
 		}
 
-		let dir = "";
-		dir += (moveTop < 0 ? "n" : (moveTop > 0 ? "s" : ""));
-		dir += (moveLeft < 0 ? "w" : (moveLeft > 0 ? "e" : ""));
-		this.editor.setAttribute("data-scroll-dir", dir);
+		let direction = "";
+		direction += (moveTop < 0 ? "n" : (moveTop > 0 ? "s" : ""));
+		direction += (moveLeft < 0 ? "w" : (moveLeft > 0 ? "e" : ""));
+		this.editor.setAttribute("data-scroll-direction", direction);
 
 		this.editor.setScrollTop(top + moveTop);
 		this.editor.setScrollLeft(left + moveLeft);
@@ -62,7 +62,7 @@ export default {
 			this.dot.classList.add("hidden");
 		}
 		if (this.editor) {
-			this.editor.removeAttribute("data-scroll-dir");
+			this.editor.removeAttribute("data-scroll-direction");
 			this.editor.classList.remove("scroll-editor-on-middle-click-editor");
 			this.editor = null;
 		}
