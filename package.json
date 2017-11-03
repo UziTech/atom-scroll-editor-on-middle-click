@@ -20,13 +20,6 @@
       "minimum": 1,
       "title": "Speed",
       "description": "The scrolling speed (higher is slower)."
-    },
-    "dotRadius": {
-      "type": "integer",
-      "default": 2,
-      "minimum": 0,
-      "title": "Dot Radius",
-      "description": "The size of the dot indicating the origin of the scroll."
     }
   }
 }

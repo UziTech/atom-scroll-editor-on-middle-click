@@ -1,0 +1,53 @@
+@import "syntax-variables";
+
+.scroll-editor-on-middle-click-dot {
+  cursor: move;
+  display: none;
+  position: absolute;
+  background-color: @syntax-text-color;
+  opacity: 0.5;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+
+  &.show {
+    display: block;
+  }
+}
+
+atom-text-editor.scroll-editor-on-middle-click-editor {
+  cursor: move !important;
+
+  // &[data-dir="n"] {
+  //   cursor: n-resize !important;
+  // }
+  //
+  // &[data-dir="ne"] {
+  //   cursor: ne-resize !important;
+  // }
+  //
+  // &[data-dir="e"] {
+  //   cursor: e-resize !important;
+  // }
+  //
+  // &[data-dir="se"] {
+  //   cursor: se-resize !important;
+  // }
+  //
+  // &[data-dir="s"] {
+  //   cursor: s-resize !important;
+  // }
+  //
+  // &[data-dir="sw"] {
+  //   cursor: sw-resize !important;
+  // }
+  //
+  // &[data-dir="w"] {
+  //   cursor: w-resize !important;
+  // }
+  //
+  // &[data-dir="nw"] {
+  //   cursor: nw-resize !important;
+  // }
+}
