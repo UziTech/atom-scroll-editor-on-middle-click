@@ -28,12 +28,6 @@
       "minimum": 1,
       "title": "Threshold",
       "description": "The number of pixels the mouse has to be away from the origin in order to move."
-    },
-    "holdDown": {
-      "type": "boolean",
-      "default": false,
-      "title": "Hold Button",
-      "description": "Hold the middle button down to scroll."
     }
   }
 }

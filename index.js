@@ -29,6 +29,9 @@ export default {
 		let direction = "";
 		direction += (moveTop < 0 ? "n" : (moveTop > 0 ? "s" : ""));
 		direction += (moveLeft < 0 ? "w" : (moveLeft > 0 ? "e" : ""));
+		if (direction !== "") {
+			this.moving = true;
+		}
 		document.body.setAttribute("data-scroll-direction", direction);
 
 		this.editor.setScrollTop(top + moveTop);
@@ -41,6 +44,8 @@ export default {
 		if (this.editor) {
 			this.stopScroll();
 		}
+		this.scrolling = true;
+		this.moving = false;
 		this.editor = editor;
 		document.body.classList.add("scroll-editor-on-middle-click-editor");
 		this.dot.style.left = e.pageX + "px";
@@ -55,6 +60,8 @@ export default {
 	},
 
 	stopScroll() {
+		this.scrolling = false;
+		this.moving = false;
 		window.removeEventListener("mousemove", this.setCurrent, { capture: true, passive: true });
 		cancelAnimationFrame(this.animationFrameId);
 		this.animationFrameId = null;
@@ -83,14 +90,18 @@ export default {
 	},
 
 	windowMouseDown(e) {
-		let editor;
-		if (e.button === 1 && (editor = e.target.closest("atom-text-editor:not([mini])")) && this.editor !== editor) {
-			this.startScroll(editor, e);
+		if (this.scrolling) {
+			this.stopScroll();
+		} else {
+			let editor;
+			if (e.button === 1 && (editor = e.target.closest("atom-text-editor:not([mini])")) && this.editor !== editor) {
+				this.startScroll(editor, e);
+			}
 		}
 	},
 
 	windowMouseUp(e) {
-		if (this.editor) {
+		if (this.moving && this.editor) {
 			this.stopScroll();
 		}
 	},
@@ -128,20 +139,10 @@ export default {
 			this.threshold = value;
 		}));
 
-		this.disposables.add(atom.config.observe("scroll-editor-on-middle-click.holdDown", (value) => {
-			if (value) {
-				window.removeEventListener("click", this.windowClick, { capture: true, passive: true });
-				window.addEventListener("mousedown", this.windowMouseDown, { capture: true, passive: true });
-				window.addEventListener("mouseup", this.windowMouseUp, { capture: true, passive: true });
-			} else {
-				window.addEventListener("click", this.windowClick, { capture: true, passive: true });
-				window.removeEventListener("mousedown", this.windowMouseDown, { capture: true, passive: true });
-				window.removeEventListener("mouseup", this.windowMouseUp, { capture: true, passive: true });
-			}
-		}));
+		window.addEventListener("mousedown", this.windowMouseDown, { capture: true, passive: true });
+		window.addEventListener("mouseup", this.windowMouseUp, { capture: true, passive: true });
 
 		this.disposables.add(new Disposable(() => {
-			window.removeEventListener("click", this.windowClick, { capture: true, passive: true });
 			window.removeEventListener("mousedown", this.windowMouseDown, { capture: true, passive: true });
 			window.removeEventListener("mouseup", this.windowMouseUp, { capture: true, passive: true });
 			this.stopScroll();
