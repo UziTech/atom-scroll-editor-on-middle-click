@@ -14,16 +14,16 @@ export default {
 		const diffTop = (this.currentY - this.y);
 		let moveTop = 0;
 		if (diffTop > this.threshold) {
-			moveTop = (diffTop - this.threshold) / this.speed;
+			moveTop = Math.round((diffTop - this.threshold) / this.speed);
 		} else if (diffTop < -this.threshold) {
-			moveTop = (diffTop + this.threshold) / this.speed;
+			moveTop = Math.round((diffTop + this.threshold) / this.speed);
 		}
 		const diffLeft = (this.currentX - this.x);
 		let moveLeft = 0;
 		if (diffLeft > this.threshold) {
-			moveLeft = (diffLeft - this.threshold) / this.speed;
+			moveLeft = Math.round((diffLeft - this.threshold) / this.speed);
 		} else if (diffLeft < -this.threshold) {
-			moveLeft = (diffLeft + this.threshold) / this.speed;
+			moveLeft = Math.round((diffLeft + this.threshold) / this.speed);
 		}
 
 		let direction = "";
