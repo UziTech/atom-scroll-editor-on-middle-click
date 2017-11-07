@@ -84,7 +84,7 @@ export default {
 
 	windowMouseDown(e) {
 		let editor;
-		if (e.button === 0 && (editor = e.target.closest("atom-text-editor:not([mini])")) && this.editor !== editor) {
+		if (e.button === 1 && (editor = e.target.closest("atom-text-editor:not([mini])")) && this.editor !== editor) {
 			this.startScroll(editor, e);
 		}
 	},
