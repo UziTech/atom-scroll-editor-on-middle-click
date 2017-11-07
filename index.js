@@ -29,7 +29,7 @@ export default {
 		let direction = "";
 		direction += (moveTop < 0 ? "n" : (moveTop > 0 ? "s" : ""));
 		direction += (moveLeft < 0 ? "w" : (moveLeft > 0 ? "e" : ""));
-		this.editor.setAttribute("data-scroll-direction", direction);
+		document.body.setAttribute("data-scroll-direction", direction);
 
 		this.editor.setScrollTop(top + moveTop);
 		this.editor.setScrollLeft(left + moveLeft);
@@ -42,7 +42,7 @@ export default {
 			this.stopScroll();
 		}
 		this.editor = editor;
-		this.editor.classList.add("scroll-editor-on-middle-click-editor");
+		document.body.classList.add("scroll-editor-on-middle-click-editor");
 		this.dot.style.left = e.pageX + "px";
 		this.dot.style.top = e.pageY + "px";
 		this.dot.classList.remove("hidden");
@@ -62,8 +62,8 @@ export default {
 			this.dot.classList.add("hidden");
 		}
 		if (this.editor) {
-			this.editor.removeAttribute("data-scroll-direction");
-			this.editor.classList.remove("scroll-editor-on-middle-click-editor");
+			document.body.removeAttribute("data-scroll-direction");
+			document.body.classList.remove("scroll-editor-on-middle-click-editor");
 			this.editor = null;
 		}
 	},
@@ -84,7 +84,7 @@ export default {
 
 	windowMouseDown(e) {
 		let editor;
-		if (e.button === 1 && (editor = e.target.closest("atom-text-editor:not([mini])")) && this.editor !== editor) {
+		if (e.button === 0 && (editor = e.target.closest("atom-text-editor:not([mini])")) && this.editor !== editor) {
 			this.startScroll(editor, e);
 		}
 	},
