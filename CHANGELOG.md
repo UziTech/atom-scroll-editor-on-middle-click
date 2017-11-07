@@ -1,5 +1,8 @@
 <!-- lint disable first-heading-level list-item-indent -->
 
+## 0.3.1 - Fix hold on middle button
+- Fix hold on middle button
+
 ## 0.3.0 - Add setting to hold down button instead of click
 - Add Hold Button setting
 - Set cursor on all elements
