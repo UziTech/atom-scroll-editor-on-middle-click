@@ -1,4 +1,6 @@
 <!-- lint disable first-heading-level list-item-indent -->
+## 0.4.0 -Remove Hold Button setting
+- Click or Hold works at the same time
 
 ## 0.3.1 - Fix hold on middle button
 - Fix hold on middle button
