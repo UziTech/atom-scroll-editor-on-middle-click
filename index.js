@@ -82,6 +82,19 @@ export default {
 		}
 	},
 
+	windowMouseDown(e) {
+		let editor;
+		if (e.button === 1 && (editor = e.target.closest("atom-text-editor:not([mini])")) && this.editor !== editor) {
+			this.startScroll(editor, e);
+		}
+	},
+
+	windowMouseUp(e) {
+		if (this.editor) {
+			this.stopScroll();
+		}
+	},
+
 	createDot() {
 		this.dot = document.createElement("div");
 		this.dot.classList.add("scroll-editor-on-middle-click-dot", "hidden");
@@ -101,6 +114,8 @@ export default {
 
 		this.setCurrent = this.setCurrent.bind(this);
 		this.windowClick = this.windowClick.bind(this);
+		this.windowMouseDown = this.windowMouseDown.bind(this);
+		this.windowMouseUp = this.windowMouseUp.bind(this);
 		this.scrollEditor = this.scrollEditor.bind(this);
 
 		this.createDot();
@@ -113,9 +128,22 @@ export default {
 			this.threshold = value;
 		}));
 
-		window.addEventListener("click", this.windowClick, { capture: true, passive: true });
+		this.disposables.add(atom.config.observe("scroll-editor-on-middle-click.holdDown", (value) => {
+			if (value) {
+				window.removeEventListener("click", this.windowClick, { capture: true, passive: true });
+				window.addEventListener("mousedown", this.windowMouseDown, { capture: true, passive: true });
+				window.addEventListener("mouseup", this.windowMouseUp, { capture: true, passive: true });
+			} else {
+				window.addEventListener("click", this.windowClick, { capture: true, passive: true });
+				window.removeEventListener("mousedown", this.windowMouseDown, { capture: true, passive: true });
+				window.removeEventListener("mouseup", this.windowMouseUp, { capture: true, passive: true });
+			}
+		}));
+
 		this.disposables.add(new Disposable(() => {
 			window.removeEventListener("click", this.windowClick, { capture: true, passive: true });
+			window.removeEventListener("mousedown", this.windowMouseDown, { capture: true, passive: true });
+			window.removeEventListener("mouseup", this.windowMouseUp, { capture: true, passive: true });
 			this.stopScroll();
 		}));
 	},
