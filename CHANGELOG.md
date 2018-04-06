@@ -1,5 +1,8 @@
 <!-- lint disable first-heading-level list-item-indent -->
-## 0.4.0 -Remove Hold Button setting
+## 0.5.0 - [ESC] cancels scrolling
+- Press <kbd>ESC</kbd> to cancel scrolling
+
+## 0.4.0 - Remove Hold Button setting
 - Click or Hold works at the same time
 
 ## 0.3.1 - Fix hold on middle button
