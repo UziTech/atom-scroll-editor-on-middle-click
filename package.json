@@ -1,7 +1,7 @@
 {
   "name": "scroll-editor-on-middle-click",
   "main": "./index.js",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Allow middle click to scroll editor",
   "keywords": [
     "middle",
