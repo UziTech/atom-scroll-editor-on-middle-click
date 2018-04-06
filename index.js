@@ -87,6 +87,17 @@ export default {
 	},
 
 	windowMouseDown(e) {
+		if(e.button === 1 && typeof this.clipboard_backup === "undefined") {
+			this.clipboard_backup = atom.clipboard.read();
+			atom.clipboard.write("");
+			var homeObject = this;
+			
+			setTimeout(function() {
+				atom.clipboard.write(homeObject.clipboard_backup);
+				homeObject.clipboard_backup = undefined;
+			}, 100);
+		}
+	
 		if (this.scrolling) {
 			this.stopScroll();
 		} else {
