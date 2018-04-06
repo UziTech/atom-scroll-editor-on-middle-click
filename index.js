@@ -87,19 +87,22 @@ export default {
 	},
 
 	windowMouseDown(e) {
-		if (this.scrolling) {
+		if(e.button === 1 && typeof this.clipboard_backup === "undefined") {
+			this.clipboard_backup = atom.clipboard.read();
+			atom.clipboard.write("");
 			var homeObject = this;
 			
-			//Slight delay added as otherwise it will paste on the second middle-click
 			setTimeout(function() {
 				atom.clipboard.write(homeObject.clipboard_backup);
+				homeObject.clipboard_backup = undefined;
 			}, 100);
+		}
+	
+		if (this.scrolling) {
 			this.stopScroll();
 		} else {
 			let editor;
 			if (e.button === 1 && (editor = e.target.closest("atom-text-editor:not([mini])")) && this.editor !== editor) {
-				this.clipboard_backup = atom.clipboard.read();
-				atom.clipboard.write('');
 				this.startScroll(editor, e);
 			}
 		}
