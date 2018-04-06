@@ -1,5 +1,4 @@
-"use babel";
-/* globals atom */
+/** @babel */
 
 import { CompositeDisposable, Disposable } from "atom";
 
@@ -7,9 +6,7 @@ export default {
 
 	scrollEditor() {
 		const top = this.editor.getScrollTop();
-		const bottom = this.editor.getScrollHeight() - this.editor.getHeight();
 		const left = this.editor.getScrollLeft();
-		const right = this.editor.getScrollWidth() - this.editor.getWidth();
 
 		const diffTop = (this.currentY - this.y);
 		let moveTop = 0;
@@ -80,6 +77,15 @@ export default {
 		this.currentY = e.pageY;
 	},
 
+	windowClick(e) {
+		let editor;
+		if (e.button === 1 && (editor = e.target.closest("atom-text-editor:not([mini])")) && this.editor !== editor) {
+			this.startScroll(editor, e);
+		} else if (this.editor) {
+			this.stopScroll();
+		}
+	},
+
 	windowMouseDown(e) {
 		if (this.scrolling) {
 			this.stopScroll();
@@ -91,7 +97,7 @@ export default {
 		}
 	},
 
-	windowMouseUp(e) {
+	windowMouseUp() {
 		if (this.moving && this.editor) {
 			this.stopScroll();
 		}
@@ -115,9 +121,11 @@ export default {
 		this.disposables = new CompositeDisposable();
 
 		this.setCurrent = this.setCurrent.bind(this);
+		this.windowClick = this.windowClick.bind(this);
 		this.windowMouseDown = this.windowMouseDown.bind(this);
 		this.windowMouseUp = this.windowMouseUp.bind(this);
 		this.scrollEditor = this.scrollEditor.bind(this);
+		this.stopScroll = this.stopScroll.bind(this);
 
 		this.createDot();
 
@@ -137,6 +145,8 @@ export default {
 			window.removeEventListener("mouseup", this.windowMouseUp, { capture: true, passive: true });
 			this.stopScroll();
 		}));
+
+		this.disposables.add(atom.commands.add("atom-workspace", { "core:cancel": this.stopScroll }));
 	},
 
 	/**
