@@ -88,10 +88,18 @@ export default {
 
 	windowMouseDown(e) {
 		if (this.scrolling) {
+			var homeObject = this;
+			
+			//Slight delay added as otherwise it will paste on the second middle-click
+			setTimeout(function() {
+				atom.clipboard.write(homeObject.clipboard_backup);
+			}, 100);
 			this.stopScroll();
 		} else {
 			let editor;
 			if (e.button === 1 && (editor = e.target.closest("atom-text-editor:not([mini])")) && this.editor !== editor) {
+				this.clipboard_backup = atom.clipboard.read();
+				atom.clipboard.write('');
 				this.startScroll(editor, e);
 			}
 		}
