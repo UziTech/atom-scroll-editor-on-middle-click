@@ -77,21 +77,16 @@ export default {
 		this.currentY = e.pageY;
 	},
 
-	windowClick(e) {
-		let editor;
-		if (e.button === 1 && (editor = e.target.closest("atom-text-editor:not([mini])")) && this.editor !== editor) {
-			this.startScroll(editor, e);
-		} else if (this.editor) {
-			this.stopScroll();
-		}
-	},
-
 	windowMouseDown(e) {
 		if (this.scrolling) {
+			if (e.button === 1) {
+				e.stopPropagation();
+			}
 			this.stopScroll();
 		} else {
 			let editor;
 			if (e.button === 1 && (editor = e.target.closest("atom-text-editor:not([mini])")) && this.editor !== editor) {
+				e.stopPropagation();
 				this.startScroll(editor, e);
 			}
 		}
@@ -121,7 +116,6 @@ export default {
 		this.disposables = new CompositeDisposable();
 
 		this.setCurrent = this.setCurrent.bind(this);
-		this.windowClick = this.windowClick.bind(this);
 		this.windowMouseDown = this.windowMouseDown.bind(this);
 		this.windowMouseUp = this.windowMouseUp.bind(this);
 		this.scrollEditor = this.scrollEditor.bind(this);
