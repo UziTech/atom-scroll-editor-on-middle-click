@@ -109,19 +109,12 @@ export default {
 			}
 			this.stopScroll();
 		} else {
-			const pane = e.target.closest(
-				"atom-text-editor:not([mini]), " +
-				".results-view-container, " +
-				".settings-view .panels-item, " +
-				".tree-view"
-			);
-			if (
-				e.button === 1 &&
-				pane &&
-				this.pane !== pane
-			) {
-				e.stopPropagation();
-				this.startScroll(pane, e);
+			if (e.button === 1) {
+				const pane = e.target.closest(this.selectors);
+				if (pane && this.pane !== pane) {
+					e.stopPropagation();
+					this.startScroll(pane, e);
+				}
 			}
 		}
 	},
@@ -163,6 +156,10 @@ export default {
 
 		this.disposables.add(atom.config.observe("scroll-editor-on-middle-click.threshold", (value) => {
 			this.threshold = value;
+		}));
+
+		this.disposables.add(atom.config.observe("scroll-editor-on-middle-click.selectors", (value) => {
+			this.selectors = value;
 		}));
 
 		window.addEventListener("mousedown", this.windowMouseDown, { capture: true, passive: true });
