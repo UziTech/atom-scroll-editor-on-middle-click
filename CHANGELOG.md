@@ -1,5 +1,12 @@
 <!-- lint disable first-heading-level list-item-indent -->
 
+## [0.7.0](https://github.com/UziTech/atom-scroll-editor-on-middle-click/releases/tag/v0.7.0) (2019-01-25)
+
+[Full Changelog](https://github.com/UziTech/atom-scroll-editor-on-middle-click/compare/v0.6.0...v0.7.0)
+
+- Add selector setting
+- Allow other panes to scroll ([#10](https://github.com/UziTech/atom-scroll-editor-on-middle-click/pull/10)) Thanks [@AlexWayfer](https://github.com/AlexWayfer)
+
 ## [0.6.0](https://github.com/UziTech/atom-scroll-editor-on-middle-click/releases/tag/v0.6.0) (2018-04-08)
 
 [Full Changelog](https://github.com/UziTech/atom-scroll-editor-on-middle-click/compare/v0.5.0...v0.6.0)
