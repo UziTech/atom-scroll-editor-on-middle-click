@@ -4,9 +4,20 @@ import { CompositeDisposable, Disposable } from "atom";
 
 export default {
 
-	scrollEditor() {
-		const top = this.editor.getScrollTop();
-		const left = this.editor.getScrollLeft();
+	scrollPane() {
+		let top;
+		if (typeof this.pane.getScrollTop === "function") {
+			top = this.pane.getScrollTop();
+		} else if (typeof this.pane.scrollTop === "number") {
+			top = this.pane.scrollTop;
+		}
+
+		let left;
+		if (typeof this.pane.getScrollLeft === "function") {
+			left = this.pane.getScrollLeft();
+		} else if (typeof this.pane.scrollLeft === "number") {
+			left = this.pane.scrollLeft;
+		}
 
 		const diffTop = (this.currentY - this.y);
 		let moveTop = 0;
@@ -31,19 +42,33 @@ export default {
 		}
 		document.body.setAttribute("data-scroll-direction", direction);
 
-		this.editor.setScrollTop(top + moveTop);
-		this.editor.setScrollLeft(left + moveLeft);
+		if (typeof top === "number") {
+			const targetTop = top + moveTop;
+			if (typeof this.pane.setScrollTop === "function") {
+				this.pane.setScrollTop(targetTop);
+			} else if (typeof this.pane.scrollTop === "number") {
+				this.pane.scrollTop = targetTop;
+			}
+		}
+		if (typeof left === "number") {
+			const targetLeft = left + moveLeft;
+			if (typeof this.pane.setScrollLeft === "function") {
+				this.pane.setScrollLeft(targetLeft);
+			} else if (typeof this.pane.scrollLeft === "number") {
+				this.pane.scrollLeft = targetLeft;
+			}
+		}
 
-		this.animationFrameId = requestAnimationFrame(this.scrollEditor);
+		this.animationFrameId = requestAnimationFrame(this.scrollPane);
 	},
 
-	startScroll(editor, e) {
-		if (this.editor) {
+	startScroll(pane, e) {
+		if (this.pane) {
 			this.stopScroll();
 		}
 		this.scrolling = true;
 		this.moving = false;
-		this.editor = editor;
+		this.pane = pane;
 		document.body.classList.add("scroll-editor-on-middle-click-editor");
 		this.dot.style.left = e.pageX + "px";
 		this.dot.style.top = e.pageY + "px";
@@ -53,7 +78,7 @@ export default {
 		this.currentX = e.pageX;
 		this.currentY = e.pageY;
 		window.addEventListener("mousemove", this.setCurrent, { capture: true, passive: true });
-		this.scrollEditor();
+		this.scrollPane();
 	},
 
 	stopScroll() {
@@ -65,10 +90,10 @@ export default {
 		if (this.dot) {
 			this.dot.classList.add("hidden");
 		}
-		if (this.editor) {
+		if (this.pane) {
 			document.body.removeAttribute("data-scroll-direction");
 			document.body.classList.remove("scroll-editor-on-middle-click-editor");
-			this.editor = null;
+			this.pane = null;
 		}
 	},
 
@@ -84,16 +109,25 @@ export default {
 			}
 			this.stopScroll();
 		} else {
-			let editor;
-			if (e.button === 1 && (editor = e.target.closest("atom-text-editor:not([mini])")) && this.editor !== editor) {
+			const pane = e.target.closest(
+				"atom-text-editor:not([mini]), " +
+				".results-view-container, " +
+				".settings-view .panels-item, " +
+				".tree-view"
+			);
+			if (
+				e.button === 1 &&
+				pane &&
+				this.pane !== pane
+			) {
 				e.stopPropagation();
-				this.startScroll(editor, e);
+				this.startScroll(pane, e);
 			}
 		}
 	},
 
 	windowMouseUp() {
-		if (this.moving && this.editor) {
+		if (this.moving && this.pane) {
 			this.stopScroll();
 		}
 	},
@@ -118,7 +152,7 @@ export default {
 		this.setCurrent = this.setCurrent.bind(this);
 		this.windowMouseDown = this.windowMouseDown.bind(this);
 		this.windowMouseUp = this.windowMouseUp.bind(this);
-		this.scrollEditor = this.scrollEditor.bind(this);
+		this.scrollPane = this.scrollPane.bind(this);
 		this.stopScroll = this.stopScroll.bind(this);
 
 		this.createDot();
